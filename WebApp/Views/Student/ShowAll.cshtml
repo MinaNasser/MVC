@@ -1,0 +1,26 @@
+﻿@model List<Student>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Image</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var std in Model)
+        {
+            <tr>
+                <th >@std.Id</th>
+                <td>@std.Name</td>
+                <td>
+                    <img class="w-25 h-25" src="~/Images/@std.Image" alt="Alternate Text" />
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>

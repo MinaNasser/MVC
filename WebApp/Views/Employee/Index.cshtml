@@ -1,0 +1,51 @@
+﻿@model List<Employee>
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<h1>Employee List</h1>
+
+@* <a href="/Department/Add" class="btn btn-success"> New </a> *@
+<div class="container ">
+
+    <a asp-action="New" asp-controller="Employee" class="btn btn-success"> New </a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Salary</th>
+            <th>JobTitle</th>
+            <th>Address</th>
+            <th>ImageURL</th>
+            <th>Department</th>
+            <th>Edit  </th>
+            <th>Delete</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Salary</td>
+                <td>@item.JobTitle</td>
+                <td>@item.Address</td>
+                <td><img src="@item.ImageURL" alt="Alternate Text" /></td>
+                <td>@item.Department.Name</td>
+                <td><a asp-action="Edit" asp-controller="Employee" asp-route-id="@item.Id">Edit</a></td>
+                <td><a asp-action="Delete" asp-controller="Employee" asp-route-id="@item.Id">Delete</a></td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
