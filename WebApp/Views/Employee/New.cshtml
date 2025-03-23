@@ -36,6 +36,7 @@
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
     <div>
+
         <label asp-for="DepartmentId" ></label>
         <select class="form form-control " asp-for="DepartmentId" asp-items="listItems">
             <option value="0">--Select Department</option>
@@ -54,4 +55,12 @@
 <a asp-action="Index" asp-controller="Employee">Back To List</a>
 
 </div>
+@section Scripts {
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script> *@
+
+}
+
 

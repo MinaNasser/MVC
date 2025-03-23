@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,7 @@ namespace WebApp.Models
         [MaxLength(30)]
         [MinLength(3)]
         [UniqName(msg ="Enter Uniq Name Please")]
+        //[Remote(action:"CheckName",controller:"Employee",ErrorMessage ="Name Must Contain ITI")]
         public string Name { get; set; }
 
         [Required]
