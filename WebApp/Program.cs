@@ -7,6 +7,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ITIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSession(option =>
+{
+    option.IdleTimeout= TimeSpan.FromMinutes(10);
+    
+     
+});
 
 var app = builder.Build();
 
@@ -16,6 +22,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 

@@ -12,9 +12,8 @@ namespace WebApp.Models
     public class Employee
     {
         [Key]
-
         public int Id { get; set; }
-
+ 
         [Display(Name="Employee Name")]
         [Required]
         [MaxLength(30)]
@@ -22,10 +21,14 @@ namespace WebApp.Models
         [UniqName(msg ="Enter Uniq Name Please")]
         //[Remote(action:"CheckName",controller:"Employee",ErrorMessage ="Name Must Contain ITI")]
         public string Name { get; set; }
+
         [Required]
         [Range(minimum: 3000,maximum: 10000)]
         public int Salary { get; set; }
+
+        [Required(ErrorMessage = "Enter JobTitle Please")]
         public string JobTitle { get; set; }
+
         [Required]
         [RegularExpression(@"\w+\.(jpg|png)", ErrorMessage = "Image Must be .jpg or .png ")]
         public string ImageURL { get; set; }
@@ -33,6 +36,7 @@ namespace WebApp.Models
         [Required]
         [RegularExpression(@"[a-zA-Z]{3,}")]
         public string Address { get; set; }
+
         [ForeignKey("Department")]
         [Display(Name= "Department")]
         public int DepartmentId { get; set; }
