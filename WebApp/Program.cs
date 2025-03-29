@@ -13,6 +13,10 @@ builder.Services.AddSession(option =>
     
      
 });
+//Custom Servce "RegisterB
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
 
 var app = builder.Build();
 
