@@ -34,6 +34,30 @@ app.UseRouting();
 app.UseAuthorization();
 
 
+//app.Use(async (httpContext, Next) =>
+//    {
+//        Console.WriteLine("Middleware 1");
+//        await httpContext.Response.WriteAsync("1)Middleware 1\n");
+//        await Next.Invoke();
+//    });
+
+//app.Use(async (httpContext, Next) =>
+//{
+//    Console.WriteLine("Middleware 1");
+//    await httpContext.Response.WriteAsync("1)Middleware 1\n");
+//    await Next.Invoke();
+//});
+//app.Run(async (httpContext) =>
+//{
+//    Console.WriteLine("Middleware 3 run");
+//    await httpContext.Response.WriteAsync("3=dsds)Middleware 3\n");
+//});
+//app.Use(async (httpContext, Next) =>
+//{
+//    Console.WriteLine("Middleware 3");
+//    await httpContext.Response.WriteAsync("3)Middleware 3\n");
+//    await Next.Invoke();
+//});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
