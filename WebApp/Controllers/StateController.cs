@@ -20,6 +20,23 @@ namespace WebApp.Controllers
             int? a =HttpContext.Session.GetInt32("Age");
             return Content($"Name :- {n} :Age:- {a} ");
         }
+        public IActionResult SetCookie()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(1);
+            //logic
+            HttpContext.Response.Cookies.Append("Name", "Mina");
+            HttpContext.Response.Cookies.Append("Age", "25");
+            return Content("Data Cookies Save Success");
+        }
+        public IActionResult GetCookie()
+        {
+            //logic
+            string n = HttpContext.Request.Cookies["Name"];
+            //logic
+            string a = HttpContext.Request.Cookies["Age"];
+            return Content($"Frome Cookies Name :- {n} :Age:- {a} ");
+        }
 
     }
 }
