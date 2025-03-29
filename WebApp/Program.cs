@@ -3,6 +3,16 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//builder.Services.AddControllersWithViews(
+//    option =>
+//    {
+//        option.Filters.Add(new HandelErrorAttribute());
+//    }
+
+
+//    );
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ITIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -16,6 +26,7 @@ builder.Services.AddSession(option =>
 //Custom Servce "RegisterB
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
 
 
 var app = builder.Build();
