@@ -38,5 +38,22 @@ namespace WebApp.Controllers
             return Content($"Frome Cookies Name :- {n} :Age:- {a} ");
         }
 
+        public IActionResult SetCookie()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(20);
+            HttpContext.Response.Cookies.Append("Name", "Mina",options);
+            HttpContext.Response.Cookies.Append("Age", "25",options);
+            return Content("Cookies Saved");
+        }
+
+        public IActionResult GetCookie()
+        {
+            
+            
+            string name = HttpContext.Request.Cookies["Name"];
+            string age = HttpContext.Request.Cookies["Age"];
+            return Content($"Name :- {name} :Age:- {age} ");
+        }
     }
 }
