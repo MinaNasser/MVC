@@ -2,11 +2,12 @@
 // This class is used to interact with the database using Entity Framework Core
 // It is also used to configure the database using Fluent API
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 using WebApp.Models;
 
-public class ITIContext : DbContext
+public class ITIContext : IdentityDbContext<AppUser>
 {
     public ITIContext()
     {
