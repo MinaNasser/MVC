@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
 using WebApp.Models;
+using WebApp.ViewModel;
 
-namespace Q3DotNetAssiut.Controllers
+namespace WebApp.Controllers
 {
     public class AccountController : Controller
     {
