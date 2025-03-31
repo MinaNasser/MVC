@@ -42,7 +42,7 @@ namespace WebApp.Controllers
                 if (result.Succeeded)
                 {
                     //assign to role
-                    //await userManager.AddToRoleAsync(appUser, "Admin");amr
+                    //await userManager.AddToRoleAsync(appUser, "Admin") ;amr
                     //Cookie
 
                     await signInManager.SignInAsync(appUser, false);

@@ -17,12 +17,15 @@ namespace WebApp.Controllers
             return View("Index",DepartmentList);
         }
 
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Add()
         {
             return View("Add"); 
         }
         //[HttpGet]
-        [HttpPost]  
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveAdd(Department departmentFromReq)
         {
 
@@ -37,6 +40,7 @@ namespace WebApp.Controllers
             }
             return View("Add", departmentFromReq);
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var employee = db.Department.FirstOrDefault(e => e.Id == id);
@@ -49,6 +53,7 @@ namespace WebApp.Controllers
             return View("Index");
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveEdit(Department department)
         {
 
@@ -64,6 +69,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             Department department = db.Department.FirstOrDefault(x => x.Id == id);

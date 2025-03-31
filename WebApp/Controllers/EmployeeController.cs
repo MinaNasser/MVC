@@ -66,6 +66,8 @@ namespace WebApp.Controllers
 
             return View("DetailsViewModel",EV);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var employee = context.Employee.FirstOrDefault(e => e.Id == id);
@@ -80,6 +82,7 @@ namespace WebApp.Controllers
             return View(viewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveEdit(Employee emp)  
         {
             
@@ -99,6 +102,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             Employee employee = context.Employee.FirstOrDefault(x => x.Id == id);
@@ -112,6 +116,7 @@ namespace WebApp.Controllers
 
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult New()
         {
             ViewData["DeptList"] = context.Department.ToList();
@@ -120,6 +125,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveNewEmp(Employee empFromReq)
         {
             //if (empFromReq.Name !=null)
