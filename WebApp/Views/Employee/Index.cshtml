@@ -12,6 +12,7 @@
     <a asp-action="New" asp-controller="Employee" class="btn btn-success"> New </a>
 </div>
 
+<div id="div1" style="border : solid 2px red"></div>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -24,12 +25,12 @@
             <th>Department</th>
             <th>Edit  </th>
             <th>Delete</th>
+            <th>Details</th>
 
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
+        @foreach (var item in Model){
             <tr>
                 <td>@item.Id</td>
                 <td>@item.Name</td>
@@ -40,12 +41,26 @@
                 <td>@item.Department.Name</td>
                 <td><a asp-action="Edit" asp-controller="Employee" asp-route-id="@item.Id">Edit</a></td>
                 <td><a asp-action="Delete" asp-controller="Employee" asp-route-id="@item.Id">Delete</a></td>
+                <td><a href="Employee/EmpCardPartial/@item.Id" onclick="GetEmpData(@item.Id)">Details</a></td>
 
             </tr>
         }
     </tbody>
 </table>
 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    function GetEmpData(EmpID) {
+        event.preventDefault();
+        //Ajax Call Endpont using jquery
 
+        $.ajax({
+            url: "/Employee/EmpCardPartial/" + EmpID,
+            success: function (result) {
+                console.log(result);
+                $("#div1").html(result);
+            }
+        });
 
-
+    }
+</script>

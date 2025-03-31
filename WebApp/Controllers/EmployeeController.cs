@@ -1,151 +1,186 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Extentions;
+
 using WebApp.Models;
 using WebApp.ViewModel;
 
-namespace WebApp.Controllers
+namespace Q3DotNetAssiut.Controllers
 {
-    [Authorize]
     public class EmployeeController : Controller
     {
-        ITIContext context   = new ITIContext();
-        EmpWithDEptListViewModel EmpWithDEptListViewModel = new EmpWithDEptListViewModel();
-        public IActionResult Index()
+        //  ITIContext context = new ITIContext();
+        IDepartmentRepository DepartmentRepository;
+        IEmployeeRepository EmployeeRepository;
+        public EmployeeController(IDepartmentRepository deptReo, IEmployeeRepository EmpRepo)
         {
-            List<Employee> EmployeeList =context.Employee
-                .Include(e=>e.Department)
-                .ToList();
-            return View("Index", EmployeeList);
+            DepartmentRepository = deptReo;
+            EmployeeRepository = EmpRepo;
         }
 
-        public IActionResult Details(int id)
+        //Employee/EmpCardPartial/1   "Calling using ajax "Partial request"
+        public IActionResult EmpCardPartial(int id)
         {
-            string msg = "Hello from Details Action From EmployeeController ";
-            int tempretuer = 50;
-            List<string> branch = new List<string>();
-            branch.Add("Aswan");
-            branch.Add("Alex");
-            branch.Add("Assiut");
-            //Aditinal data i need to send to view
-            ViewData["Msg"] = msg;
-            ViewData["Tempretuer"] = tempretuer;
-            ViewData["Branchs"] = branch;
-
-            ViewBag.color = "Red";
-            Employee emp = context.Employee.FirstOrDefault(e => e.Id == id);
-
-            return View("Details",emp);
+            return PartialView("_EmpCard", EmployeeRepository.GetById(id));//Model=Null
         }
 
-        public IActionResult DetailsViewModel(int id ) 
+
+
+
+
+
+
+
+
+        //Employee/CheckSalary?Salary=1000
+        public IActionResult CheckSalary(int Salary, string JobTitle)
         {
-            string msg = "Hello from Details Action From EmployeeController ";
-            int tempretuer = 50;
-            List<string> branch = new List<string>();
-            branch.Add("Aswan");
-            branch.Add("Alex");
-            branch.Add("Assiut");
-            //Aditinal data i need to send to view
-            ViewData["Msg"] = msg;
-            ViewData["Tempretuer"] = tempretuer;
-            ViewData["Branchs"] = branch;
-
-            ViewBag.color = "Red";
-            Employee empModel = context
-                .Employee.Include(e=>e.Department)
-                .FirstOrDefault(e => e.Id == id);
-            EmpDEptColorTempMSgBrchViewModel EV = new EmpDEptColorTempMSgBrchViewModel();
-            EV.EmployeeName = empModel.Name;
-            EV.DeptName = empModel.Department.Name;
-            EV.Msg = msg;
-            EV.Temprtuer = tempretuer;
-            EV.Color=ViewBag.color;
-            EV.Branches = branch;
-
-
-            return View("DetailsViewModel",EV);
+            if (Salary > 6000 && JobTitle == "S")
+                return Json(true);
+            else if (JobTitle == "B" && Salary > 10000)
+                return Json(true);
+            else if (JobTitle == "M" && Salary > 40000)
+                return Json(true);
+            else
+                return Json(false);
         }
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            var employee = context.Employee.FirstOrDefault(e => e.Id == id);
-            var departments = context.Department.ToList();
 
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = employee.Expand(departments);
-            return View(viewModel);
-        }
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public IActionResult SaveEdit(Employee emp)  
-        {
-            
-            if (ModelState.IsValid== true)
-            {
-                Employee temp = context.Employee.FirstOrDefault(e => e.Id == emp.Id);
-                temp.Address = emp.Address;
-                temp.Salary =emp.Salary;
-                temp.Name = emp.Name;
-                temp.JobTitle = emp.JobTitle;
-                temp.DepartmentId = emp.DepartmentId;
-                temp.ImageURL = emp.ImageURL;
-                context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View("Edit", emp);
-        }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult Delete(int id)
+        public IActionResult NEw()
         {
-            Employee employee = context.Employee.FirstOrDefault(x => x.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            context.Remove(employee);
-            context.SaveChanges();
-            return RedirectToAction("Index", "Employee");
-
-        }
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult New()
-        {
-            ViewData["DeptList"] = context.Department.ToList();
+            ViewData["DeptList"] = DepartmentRepository.GetAll();
             return View("New");
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public IActionResult SaveNewEmp(Employee empFromReq)
+        public IActionResult SaveNEw(Employee EmpFromREquest)
         {
-            //if (empFromReq.Name !=null)
-            if (ModelState.IsValid == true) 
+            if (ModelState.IsValid == true)
             {
-                if(empFromReq.DepartmentId != 0)
+                try
                 {
-
-                    context.Add(empFromReq);
-                    context.SaveChanges();
-                    return RedirectToAction("Index", "Employee");
+                    //save
+                    EmployeeRepository.Add(EmpFromREquest);
+                    EmployeeRepository.Save();
+                    return RedirectToAction("Index");
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("DepartmentId", "Select  Department");
-                    
+                    ModelState.AddModelError(string.Empty, ex.InnerException.Message);
                 }
             }
-            ViewData["DeptList"] = context.Department.ToList();
-             return View("New",empFromReq);
+            ViewData["DeptList"] = DepartmentRepository.GetAll();
+            return View("NEw", EmpFromREquest);
+        }
+
+
+
+        public IActionResult Index()
+        {
+            return View("Index", EmployeeRepository.GetAll());
+        }
+
+        //Hsandel Link
+        public IActionResult Edit(int id, string name)
+        {
+            Employee EmpModel =
+              EmployeeRepository.GetById(id);
+            List<Department> DepartmentList = DepartmentRepository.GetAll();
+            //-------------Create View Mode Mapping
+            EmpWithDEptListViewModel EmpViewModel = new EmpWithDEptListViewModel();
+            EmpViewModel.Id = EmpModel.Id;
+            EmpViewModel.Name = EmpModel.Name;
+            EmpViewModel.Address = EmpModel.Address;
+            EmpViewModel.ImageURL = EmpModel.ImageURL;
+            EmpViewModel.JobTitle = EmpModel.JobTitle;
+            EmpViewModel.Salary = EmpModel.Salary;
+            EmpViewModel.DepartmentID = EmpModel.DepartmentID;
+
+            EmpViewModel.DeptList = DepartmentList;
+
+            return View("Edit", EmpViewModel);//Model EmpDeptListViewModel
+        }
+
+        [HttpPost]
+        public IActionResult SaveEdit
+            (int id, EmpWithDEptListViewModel EmpFromREquest)//Employee EmpFromREquest,int id)
+        {
+            if (EmpFromREquest.Name != null)
+            {
+                Employee EmpFromDB = EmployeeRepository.GetById(id);//context.Employee.FirstOrDefault(e => e.Id == id);
+                EmpFromDB.Address = EmpFromREquest.Address;
+                EmpFromDB.Name = EmpFromREquest.Name;
+                EmpFromDB.Salary = EmpFromREquest.Salary;
+                EmpFromDB.JobTitle = EmpFromREquest.JobTitle;
+                EmpFromDB.ImageURL = EmpFromREquest.ImageURL;
+                EmpFromDB.DepartmentID = EmpFromREquest.DepartmentID;
+                EmpFromDB.Id = EmpFromREquest.Id;
+                EmployeeRepository.Update(EmpFromDB);
+                EmployeeRepository.Save();
+                //context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            //All Emp Data List<Department> 
+            EmpFromREquest.DeptList = DepartmentRepository.GetAll();//context.Department.ToList();
+            return View("Edit", EmpFromREquest);
+        }
+
+
+
+
+
+
+
+        public IActionResult Delete(int id)
+        {
+            return View("Delete", EmployeeRepository.GetById(id));
+        }
+
+
+        public IActionResult Details(int id)
+        {
+            string msg = "Hello From Action";
+            int temp = 50;
+            List<string> bracnches = new List<string>();
+
+            bracnches.Add("Assiut");
+            bracnches.Add("Alex");
+            bracnches.Add("Cario");
+            //Aditional info send to View from Action
+            ViewData["Msg"] = msg;
+            ViewData["Temp"] = temp;
+            ViewData["brch"] = bracnches;
+
+
+            ViewData["Color"] = "Blue";
+            ViewBag.Color = "REd";
+            //ViewData.Model=empMo
+            Employee EmpMOdel = EmployeeRepository.GetById(id);// context.Employee.FirstOrDefault(e => e.Id == id);
+            return View("Details", EmpMOdel);
+        }
+
+
+        public IActionResult DetailsVM(int id)
+        {
+            Employee empMOdel = EmployeeRepository.GetById(id);
+
+            List<string> bracnches = new List<string>();
+
+            bracnches.Add("Assiut");
+            bracnches.Add("Alex");
+            bracnches.Add("Cario");
+            //decalre viewmode
+            EmpDEptColorTempMSgBrchViewModel EmpVM =
+                new EmpDEptColorTempMSgBrchViewModel();
+            //Mapping 
+            EmpVM.EmployeeName = empMOdel.Name;
+            EmpVM.DeptName = empMOdel.Department.Name;
+            EmpVM.Color = "REd";
+            EmpVM.Temprtuer = 12;
+            EmpVM.Msg = "Hello FRom VM";
+            EmpVM.Branches = bracnches;
+            return View("DetailsVM", EmpVM);//EmpDEptColorTempMSgBrchViewModel
         }
     }
 }

@@ -11,7 +11,7 @@ namespace WebApp.Models
         public string? ManagerName { get; set; }
 
 
-        public List<Employee>? Employees { get; set; }
+        public virtual List<Employee>? Employees { get; set; }
     }
 }
 

@@ -15,7 +15,9 @@ public class ITIContext : IdentityDbContext<AppUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=.;Database=ITIWithCristen;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
+        optionsBuilder
+            .UseLazyLoadingProxies()
+            .UseSqlServer("Server=.;Database=ITIWithCristen;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
     }
 
     public DbSet<Department> Department { get; set; }

@@ -8,7 +8,9 @@ namespace WebApp.Models
         public ITIContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ITIContext>();
-            optionsBuilder.UseSqlServer("Server=.;Database=ITIWithCristen; Trusted_Connection=True; TrustServerCertificate=True; MultipleActiveResultSets=true");
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer("Server=.;Database=ITIWithCristen;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
 
             return new ITIContext(optionsBuilder.Options);
         }

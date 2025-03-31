@@ -39,7 +39,7 @@ namespace WebApp.Models
 
         [ForeignKey("Department")]
         [Display(Name= "Department")]
-        public int DepartmentId { get; set; }
+        public int DepartmentID { get; set; }
         public virtual Department? Department { get; set; }
     }
 }
@@ -57,7 +57,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(e => e.Address).IsRequired().HasMaxLength(200);
         builder.HasOne(e => e.Department)
         .WithMany(d => d.Employees)
-        .HasForeignKey(e => e.DepartmentId)
+        .HasForeignKey(e => e.DepartmentID)
         .OnDelete(DeleteBehavior.NoAction);
     }
 }
