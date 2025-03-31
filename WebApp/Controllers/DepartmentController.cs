@@ -7,12 +7,16 @@ namespace WebApp.Controllers
     public class DepartmentController : Controller
     {
         ITIContext db = new();
+
+
+        [Authorize]
         public IActionResult Index()
         {
             List<Department> DepartmentList = 
                 db.Department.Include(d=>d.Employees).ToList();
             return View("Index",DepartmentList);
         }
+
         public IActionResult Add()
         {
             return View("Add"); 

@@ -42,7 +42,7 @@ namespace WebApp.Controllers
                 if (result.Succeeded)
                 {
                     //assign to role
-                    await userManager.AddToRoleAsync(appUser, "Admin");
+                    //await userManager.AddToRoleAsync(appUser, "Admin");
                     //Cookie
                     await signInManager.SignInAsync(appUser, false);
                     return RedirectToAction("Index", "Department");
@@ -64,7 +64,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]//requets.form['_requetss]
         public async Task<IActionResult> SaveLogin(LoginUserViewModel userViewModel)
-        {
+         {
             if (ModelState.IsValid==true)
             {
                 //check found 
@@ -72,18 +72,13 @@ namespace WebApp.Controllers
                     await userManager.FindByNameAsync(userViewModel.Name);
                 if (appUser != null)
                 {
-                   bool found=
-                        await userManager.CheckPasswordAsync(appUser, userViewModel.Password);
-                    if(found==true)
+                     
+                    bool found = await userManager.CheckPasswordAsync(appUser, userViewModel.Password);
+                    if (found == true) 
                     {
-                        List<Claim> Claims = new List<Claim>();
-                        Claims.Add(new Claim("UserAddress",appUser.Address));
-
-                        await signInManager.SignInWithClaimsAsync(appUser, userViewModel.RememberMe, Claims);
-                       //await signInManager.SignInAsync(appUser, userViewModel.RememberMe);
-                        return RedirectToAction("Index", "Department");
+                        await signInManager.SignInAsync(appUser, userViewModel.RememberMe);
+                        return RedirectToAction("index", "department");
                     }
-                    
                 }
                 ModelState.AddModelError("", "Username OR PAssword wrong");
                 //create cookie

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApp.Repository;
 
 
@@ -11,6 +12,23 @@ namespace WebApp.Controllers
         public ServiceController(IDepartmentRepository deptREpo)
         {
             this.deptREpo = deptREpo;
+        }
+
+
+        public IActionResult TestAuth()
+        {
+            if(User.Identity.IsAuthenticated== true)
+            {
+               Claim claim =  User.Claims.FirstOrDefault( u=>u.Type == ClaimTypes.NameIdentifier);
+
+
+
+                string id = claim.Value;
+                string name = User.Identity.Name;
+                return Content($"\n\n\n\t\t\t\tWelcom {name}\n \t\t\t\tID:{id} ");
+            }
+               
+            return Content("Welcom Guste ");
         }
 
         public IActionResult Index(int id)//[FromServices]IDepartmentRepository deptrr)
