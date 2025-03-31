@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
@@ -7,6 +8,15 @@ namespace WebApp.Controllers
         public IActionResult AddRole()
         {
             return View("AddRole");
+        }
+        public IActionResult SaveRole(RoleVM role) {
+            if (ModelState.IsValid)
+            {
+
+            }
+            return View("AddRole",role);
+
+
         }
     }
 }
