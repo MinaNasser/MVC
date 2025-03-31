@@ -12,6 +12,7 @@ namespace WebApp.Repository
 
         public List<Employee> GetAll();
         public Employee GetById(int id);
+        public List<Employee> GetByDEptID(int deptId);
 
         public void Save();
       
