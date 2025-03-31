@@ -20,12 +20,14 @@ namespace WebApp.Controllers
             if(User.Identity.IsAuthenticated== true)
             {
                Claim claim =  User.Claims.FirstOrDefault( u=>u.Type == ClaimTypes.NameIdentifier);
-
+                Claim address = User.Claims.FirstOrDefault(c => c.Type == "UserAddress");
 
 
                 string id = claim.Value;
+
                 string name = User.Identity.Name;
-                return Content($"\n\n\n\t\t\t\tWelcom {name}\n \t\t\t\tID:{id} ");
+                
+                return Content($"\n\n\n\t\t\t\tWelcom {name}\n \t\t\t\tID:{id} //// {address.Value}");
             }
                
             return Content("Welcom Guste ");

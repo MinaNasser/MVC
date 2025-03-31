@@ -25,7 +25,7 @@ namespace WebApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SaveRegister
+        public async Task<IActionResult> Register
             (RegisterUserViewModel UserViewModel)
         {
             if (ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]//requets.form['_requetss]
-        public async Task<IActionResult> SaveLogin(LoginUserViewModel userViewModel)
+        public async Task<IActionResult> Login(LoginUserViewModel userViewModel)
          {
             if (ModelState.IsValid==true)
             {
@@ -78,7 +78,7 @@ namespace WebApp.Controllers
                     {
                         List<Claim> claims = new List<Claim>();
                         claims.Add(new Claim("UserAddress",appUser.Address));
-                        claims.Add(new Claim("UserAddress",appUser.Address));
+                        //claims.Add(new Claim("UserAddress",appUser.Address));
                         await signInManager.SignInWithClaimsAsync(appUser,userViewModel.RememberMe ,claims);
                         //await signInManager.SignInAsync(appUser, userViewModel.RememberMe);
                         return RedirectToAction("index", "department");
