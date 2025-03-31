@@ -94,7 +94,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> SignOut()
         {
             await signInManager.SignOutAsync();
-            return View("Login");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
