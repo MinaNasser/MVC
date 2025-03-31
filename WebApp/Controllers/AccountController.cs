@@ -76,7 +76,11 @@ namespace WebApp.Controllers
                     bool found = await userManager.CheckPasswordAsync(appUser, userViewModel.Password);
                     if (found == true) 
                     {
-                        await signInManager.SignInAsync(appUser, userViewModel.RememberMe);
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(new Claim("UserAddress",appUser.Address));
+                        claims.Add(new Claim("UserAddress",appUser.Address));
+                        await signInManager.SignInWithClaimsAsync(appUser,userViewModel.RememberMe ,claims);
+                        //await signInManager.SignInAsync(appUser, userViewModel.RememberMe);
                         return RedirectToAction("index", "department");
                     }
                 }
