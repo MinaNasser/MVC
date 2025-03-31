@@ -6,6 +6,7 @@ using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         ITIContext context   = new ITIContext();
