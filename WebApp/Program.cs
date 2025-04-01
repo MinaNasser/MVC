@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,7 @@ builder.Services.AddSession(option =>
      
 });
 //Custom Servce "RegisterB
+builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<ITIContext>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
@@ -31,6 +34,20 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 var app = builder.Build();
 
+//DEcalre & execute
+//naming confinatoin Route (Defain rout with name ,pattern ,default )
+//constrint
+//Optianl segment
+//app.MapControllerRoute("Route1", "R1/{name}/{age:int}/{color?}",
+//    new { controller ="Route",action= "Method1" }
+//    );
+//app.MapControllerRoute("Route2", "R2",
+//   new { controller = "Route", action = "Method2" }
+//   );
+
+
+
+//  app.MapControllerRoute("Route1", "{controller=Route}/{action=Method1}");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -42,7 +59,9 @@ app.UseSession();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 //app.Use(async (httpContext, Next) =>

@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 
 namespace WebApp.Repository
@@ -38,6 +39,10 @@ namespace WebApp.Repository
         public void Save()
         {
             context.SaveChanges();
+        }
+        public List<Employee> GetByDEptID(int deptId)
+        {
+            return context.Employee.Where(e => e.DepartmentID == deptId).ToList();
         }
     }
 }

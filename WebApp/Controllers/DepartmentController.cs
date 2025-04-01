@@ -1,77 +1,106 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
     public class DepartmentController : Controller
     {
-        ITIContext db = new();
+        IDepartmentRepository DeptREpo;
+        IEmployeeRepository EmployeeREpo;
+
+        public DepartmentController(IDepartmentRepository deptRepo, IEmployeeRepository empRepo)
+        {
+            DeptREpo = deptRepo;
+            EmployeeREpo = empRepo;
+        }
+
+        public IActionResult DeptEmps()
+        {
+            return View("DeptEmps", DeptREpo.GetAll());
+        }
+
+        public IActionResult GetEmpsByDEptId(int deptId)
+        {
+            var employees = EmployeeREpo.GetByDEptID(deptId)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.Name,
+                    e.Address,
+                    DepartmentName = e.Department.Name // تجنب تحميل الكائن بالكامل
+                }).ToList();
+
+            return Json(employees);
+        }
+
+
+        [Authorize]
         public IActionResult Index()
         {
-            List<Department> DepartmentList = 
-                db.Department.Include(d=>d.Employees).ToList();
-            return View("Index",DepartmentList);
+            List<Department> departmentList = DeptREpo.GetAll();
+            return View("Index", departmentList);
         }
+
+        [HttpGet]
         public IActionResult Add()
         {
-            return View("Add"); 
+            return View("Add");
         }
-        //[HttpGet]
-        [HttpPost]  
-        public IActionResult SaveAdd(Department departmentFromReq)
+
+        [HttpPost]
+        public IActionResult SAveAdd(Department newDeptFromRequest)
         {
-
-
-            if (departmentFromReq.Name != null)
+            if (newDeptFromRequest.Name != null)
             {
-                db.Department.Add(departmentFromReq);
-                db.SaveChanges(); 
-                //return View("Index" );
-                //call action from anther Action 
+                DeptREpo.Add(newDeptFromRequest);
+                DeptREpo.Save();
                 return RedirectToAction("Index");
             }
-            return View("Add", departmentFromReq);
+            return View("Add", newDeptFromRequest);
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
-            var employee = db.Department.FirstOrDefault(e => e.Id == id);
-            var departments = db.Department.ToList();
-
-            if (employee == null)
+            var department = DeptREpo.GetById(id);
+            if (department == null)
             {
                 return NotFound();
             }
-            return View("Index");
+            return View("Edit", department);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult SaveEdit(Department department)
         {
-
-            if (ModelState.IsValid == true)
+            if (ModelState.IsValid)
             {
-                Department temp = db.Department.FirstOrDefault(e => e.Id == department.Id);
-                temp.Name = department.Name;
-                
-                db.SaveChanges();
+                Department temp = DeptREpo.GetById(department.Id);
+                if (temp != null)
+                {
+                    temp.Name = department.Name;
+                    DeptREpo.Update(temp);
+                    DeptREpo.Save();
+                }
                 return RedirectToAction("Index");
             }
             return View("Edit", department);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
-            Department department = db.Department.FirstOrDefault(x => x.Id == id);
+            Department department = DeptREpo.GetById(id);
             if (department == null)
             {
                 return NotFound();
             }
-            db.Remove(department);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Department");
-
+            DeptREpo.Delete(department.Id);
+            DeptREpo.Save();
+            return RedirectToAction("Index");
         }
-
     }
 }

@@ -15,7 +15,7 @@ namespace WebApp.Extentions
                 JobTitle = emp.JobTitle,
                 ImageURL = emp.ImageURL,
                 Address = emp.Address,
-                DepartmentID = emp.DepartmentId,
+                DepartmentID = emp.DepartmentID,
                 DeptList = departments
             };
         }
